@@ -1,0 +1,28 @@
+{
+  "name": "wip-ev-exhibition-demo",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Offline exhibition kiosk demo for WIP wireless EV and AMR charging",
+  "main": "electron-main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "kiosk": "electron . --kiosk",
+    "dev": "electron . --devtools",
+    "check": "node --check app.js && node --check electron-main.cjs && node --check preload.cjs && node --check device/relay-controller.cjs",
+    "test": "node --test test/*.test.cjs",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder --win nsis portable"
+  },
+  "devDependencies": {
+    "electron": "^37.2.0",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "kr.co.wip.ev.kiosk",
+    "productName": "WIP EV Wireless Charging Experience",
+    "asar": true,
+    "files": ["index.html", "styles-v3.css", "styles-stage.css", "styles-simulation.css", "styles-final.css", "styles-bay.css", "styles-top.css", "styles-power.css", "styles-position-fix.css", "styles-exact-center.css", "styles-display-type.css", "styles-polish.css", "styles-victory.css", "styles-station.css", "styles-compact-pad.css", "styles-pbv.css", "styles-charge-real.css", "app-v3.js", "assets/**/*", "electron-main.cjs", "preload.cjs", "device/**/*"],
+    "win": { "target": ["nsis", "portable"] },
+    "nsis": { "oneClick": false, "allowToChangeInstallationDirectory": true, "createDesktopShortcut": true }
+  }
+}

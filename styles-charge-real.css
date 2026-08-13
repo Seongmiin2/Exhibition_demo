@@ -1,0 +1,121 @@
+/* Final charging view rebuilt around the supplied PHA-WIP installation references. */
+.bay-scene.charging {
+  background:
+    linear-gradient(90deg, transparent 49.8%, rgba(255,255,255,.08) 50%, transparent 50.2%),
+    linear-gradient(0deg, transparent 13%, rgba(255,255,255,.14) 13.2%, transparent 13.5%),
+    radial-gradient(circle at 50% 46%, #26302f 0, #17201f 38%, #0a1110 76%);
+}
+
+.bay-scene.charging > .bay-bg { opacity:0!important }
+
+.bay-scene.charging .active-pad {
+  z-index:5!important;
+  left:50%!important;
+  top:36.5%!important;
+  width:8.5%!important;
+  transform:translate(-50%,-50%)!important;
+  filter:drop-shadow(0 8px 10px rgba(0,0,0,.65));
+}
+
+.bay-scene.charging .pad-rating { top:41.5%!important }
+
+/* A single PCS feed enters the GA pad from the vehicle-front side. */
+.bay-scene.charging .legacy-pad-mask {
+  display:block!important;
+  position:absolute;
+  z-index:4;
+  left:50%;
+  top:0;
+  width:7px;
+  height:36.5%;
+  transform:translateX(-50%);
+  border-radius:0 0 8px 8px;
+  background:#182927;
+  border:1px solid rgba(97,231,190,.38);
+  box-shadow:0 0 0 3px rgba(0,0,0,.25),0 0 18px rgba(85,237,189,.25);
+  overflow:hidden;
+}
+
+.bay-scene.charging .legacy-pad-mask:before {
+  content:'PCS → GA';
+  position:absolute;
+  top:14px;
+  left:14px;
+  padding:5px 7px;
+  border-radius:6px;
+  background:rgba(3,15,12,.88);
+  color:#8ff1d0;
+  font-size:8px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.bay-scene.charging .legacy-pad-mask:after {
+  content:'';
+  position:absolute;
+  left:1px;
+  width:3px;
+  height:26px;
+  border-radius:3px;
+  background:#8ff1d0;
+  box-shadow:0 0 12px #55edbd;
+  animation:front-current 1.15s linear infinite;
+}
+
+@keyframes front-current {
+  from { top:-30px; opacity:0 }
+  20% { opacity:1 }
+  to { top:100%; opacity:0 }
+}
+
+.bay-scene.charging:after { display:none!important }
+.charging .magnetic-field { left:46.5%!important;top:29.5%!important;width:7%!important;height:14%!important }
+.charging .receiver-coil { left:47.8%!important;top:33.5%!important;width:4.4%!important;height:7%!important }
+.charging .bay-energy { left:47.2%!important;top:33%!important;width:5.6%!important;height:8%!important }
+.charging .underbody-battery { left:46%!important;top:43.5%!important;width:8%!important;height:14%!important }
+.charging .energy-route { left:49.2%!important;top:40.5%!important;height:6%!important }
+
+/* Front-facing charge composition: GA pad enters between the front wheels. */
+.bay-scene.charging .moving-car.front-view {
+  z-index:7!important;
+  left:50%!important;
+  top:5%!important;
+  width:72%!important;
+  height:auto!important;
+  transform:translateX(-50%)!important;
+  transform-origin:center bottom!important;
+  opacity:.88!important;
+  object-fit:contain!important;
+  filter:drop-shadow(0 22px 18px rgba(0,0,0,.7)) brightness(.88)!important;
+  animation:front-charge-breathe 2.4s ease-in-out infinite!important;
+}
+
+.bay-scene.charging .active-pad {
+  z-index:6!important;
+  left:50%!important;
+  top:68%!important;
+  width:20%!important;
+  transform:translate(-50%,-50%) perspective(500px) rotateX(54deg)!important;
+  filter:drop-shadow(0 16px 12px rgba(0,0,0,.72)) drop-shadow(0 0 16px rgba(85,237,189,.3));
+}
+
+.bay-scene.charging .pad-rating { z-index:8!important;top:75%!important }
+
+.bay-scene.charging .legacy-pad-mask {
+  top:68%!important;
+  bottom:0!important;
+  height:32%!important;
+  border-radius:8px 8px 0 0;
+}
+
+.bay-scene.charging .legacy-pad-mask:after { animation-direction:reverse }
+.bay-scene.charging .legacy-pad-mask:before { top:70%;left:14px }
+.charging .magnetic-field { z-index:8!important;left:41%!important;top:55%!important;width:18%!important;height:22%!important }
+.charging .receiver-coil { z-index:8!important;left:46%!important;top:58%!important;width:8%!important;height:10%!important }
+.charging .bay-energy { z-index:8!important;left:44%!important;top:61%!important;width:12%!important;height:14%!important }
+.charging .underbody-battery { z-index:8!important;left:46%!important;top:49%!important;width:8%!important;height:10%!important }
+.charging .energy-route { z-index:8!important;left:49.2%!important;top:55%!important;height:8%!important }
+
+@keyframes front-charge-breathe {
+  50% { filter:drop-shadow(0 25px 24px rgba(85,237,189,.25)) brightness(.96) }
+}
