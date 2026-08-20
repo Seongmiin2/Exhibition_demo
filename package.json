@@ -8,8 +8,10 @@
     "start": "electron .",
     "kiosk": "electron . --kiosk",
     "dev": "electron . --devtools",
-    "check": "node --check app.js && node --check electron-main.cjs && node --check preload.cjs && node --check device/relay-controller.cjs",
+    "check": "node --check app.js && node --check app-v3.js && node --check electron-main.cjs && node --check preload.cjs && node --check device/relay-controller.cjs && node --check device/relay-config.cjs && node --check device/relay-driver-factory.cjs && node --check device/relay-drivers/base-relay-driver.cjs && node --check device/relay-drivers/mock-relay-driver.cjs && node --check device/relay-drivers/serial-relay-driver.cjs && node --check device/relay-drivers/hid-relay-driver.cjs && node --check scripts/relay-test.cjs",
     "test": "node --test test/*.test.cjs",
+    "relay:detect": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/detect-relay.ps1",
+    "relay:test": "node scripts/relay-test.cjs",
     "pack": "electron-builder --dir",
     "dist": "electron-builder --win nsis portable"
   },

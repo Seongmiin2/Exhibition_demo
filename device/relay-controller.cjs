@@ -1,34 +1,25 @@
 'use strict';
 
-/**
- * Safe USB I/O boundary for the exhibition mock-up.
- *
- * The default driver is intentionally "mock": it records the requested output
- * without touching hardware. Replace MockRelayDriver with the vendor-specific
- * USB relay/HID/serial commands after the purchased model is confirmed.
- * Channel assignment: 2=EV charging, 4=AMR charging.
- * Channels 1 and 3 are reserved. The exhibition specification requires every
- * output to remain off except while the corresponding product is charging.
- */
-class MockRelayDriver {
-  constructor() { this.channels = [false, false, false, false]; }
-  async write(channels) { this.channels = [...channels]; }
-  status() { return { driver: 'mock', connected: false, channels: [...this.channels] }; }
-}
+const { relayConfig } = require('./relay-config.cjs');
+const { createRelayDriver } = require('./relay-driver-factory.cjs');
+const { MockRelayDriver } = require('./relay-drivers/mock-relay-driver.cjs');
 
 class RelayController {
-  constructor(driver = new MockRelayDriver()) {
+  constructor(driver = createRelayDriver(relayConfig), config = relayConfig) {
     this.driver = driver;
+    this.config = config;
     this.last = { product: 'EV', phase: 'idle' };
     this.lastError = null;
     this.pending = Promise.resolve();
   }
 
   outputsFor(product, phase) {
-    const charging = phase === 'charging';
-    return product === 'AMR'
-      ? [false, false, false, charging]
-      : [false, charging, false, false];
+    const channels = [false, false, false, false];
+    if (phase !== 'charging') return channels;
+    const configuredChannel = this.config.channels?.[product];
+    const channelIndex = Number(configuredChannel) - 1;
+    if (channelIndex >= 0 && channelIndex < channels.length) channels[channelIndex] = true;
+    return channels;
   }
 
   async setState(payload = {}) {
@@ -44,7 +35,7 @@ class RelayController {
       } catch (error) {
         this.last = { product, phase: 'fault' };
         this.lastError = error instanceof Error ? error.message : String(error);
-        try { await this.driver.write([false, false, false, false]); } catch {}
+        try { await this.driver.allOff(); } catch {}
         throw error;
       }
       return this.getStatus();
@@ -54,7 +45,14 @@ class RelayController {
 
   async allOff() { return this.setState({ product: this.last.product, phase: 'idle' }); }
   async initialize() { return this.allOff(); }
-  getStatus() { return { ...this.driver.status(), ...this.last, error: this.lastError }; }
+  getStatus() {
+    const driverStatus = this.driver.getStatus();
+    return {
+      ...driverStatus,
+      ...this.last,
+      error: this.lastError || driverStatus.error
+    };
+  }
 }
 
 module.exports = { RelayController, MockRelayDriver, relayController: new RelayController() };

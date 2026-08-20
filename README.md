@@ -67,3 +67,94 @@ CAN / RS-485 / Ethernet / Charger API
 - 소프트웨어의 OFF 처리는 PC가 명령을 보낼 수 있을 때만 유효합니다. 실제 제어박스는 NO 접점, 퓨즈, 전원 투입 시 OFF 및 통신 watchdog OFF를 하드웨어에서 별도로 보장해야 합니다.
 
 실제 USB 릴레이 사용 전에는 구매한 장비의 공식 프로토콜과 VID/PID 또는 COM 포트를 확인하여 `MockRelayDriver`를 해당 장비 드라이버로 교체해야 합니다. 모델명이 같더라도 HID/가상 COM 펌웨어가 다를 수 있으므로 확인되지 않은 명령을 실제 부하에 전송하지 않습니다.
+
+## USB Relay field integration
+
+The kiosk now uses a relay hardware abstraction layer. The default mode is `mock`, so no hardware command is sent until the actual relay type and vendor protocol are confirmed.
+
+Current architecture:
+
+```text
+UI state
+  -> preload IPC
+  -> electron-main.cjs
+  -> RelayController
+  -> Relay Driver Factory
+  -> Mock / Serial skeleton / HID skeleton
+```
+
+Default channel map:
+
+```text
+EV charging  -> CH2 ON only
+AMR charging -> CH4 ON only
+All other phases -> ALL OFF
+```
+
+Field setup order:
+
+```text
+1. Before connecting the relay:
+   npm run relay:detect
+
+2. Connect the USB Relay.
+
+3. Run again:
+   npm run relay:detect
+
+4. Identify the newly added device:
+   - manufacturer
+   - product name
+   - VID
+   - PID
+   - COM Port
+   - HID or Serial mode
+
+5. Confirm the communication protocol from the product manual.
+
+6. Fill the TODO(HARDWARE) hook in the matching driver:
+   - device/relay-drivers/serial-relay-driver.cjs
+   - device/relay-drivers/hid-relay-driver.cjs
+   - device/relay-config.cjs or environment variables
+
+7. Verify:
+   npm run check
+   npm test
+   npm run relay:test -- status
+   npm run relay:test -- all-off
+
+8. Only after ALL OFF is verified, test EV and AMR charging channels.
+
+9. Start kiosk:
+   npm run kiosk
+```
+
+Useful commands:
+
+```bash
+npm run relay:detect
+npm run relay:test -- status
+npm run relay:test -- all-off
+npm run relay:test -- ev-charge
+npm run relay:test -- ev-off
+npm run relay:test -- amr-charge
+npm run relay:test -- amr-off
+```
+
+Configuration can be supplied with environment variables:
+
+```text
+WIP_RELAY_MODE=mock
+WIP_RELAY_MODE=serial
+WIP_RELAY_PORT=COM4
+WIP_RELAY_BAUD=9600
+
+WIP_RELAY_MODE=hid
+WIP_RELAY_VENDOR_ID=1234
+WIP_RELAY_PRODUCT_ID=5678
+WIP_RELAY_USAGE_PAGE=
+WIP_RELAY_USAGE=
+WIP_RELAY_REPORT_ID=
+```
+
+Do not guess relay protocol bytes. Until the vendor protocol is implemented, serial and HID drivers fail with `TODO(HARDWARE)` and send no command.
