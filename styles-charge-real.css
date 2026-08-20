@@ -84,10 +84,56 @@
   height:auto!important;
   transform:translateX(-50%)!important;
   transform-origin:center bottom!important;
-  opacity:.88!important;
+  opacity:.98!important;
   object-fit:contain!important;
-  filter:drop-shadow(0 22px 18px rgba(0,0,0,.7)) brightness(.88)!important;
+  filter:drop-shadow(0 24px 20px rgba(0,0,0,.72)) drop-shadow(0 0 16px rgba(114,235,205,.12)) brightness(.98) contrast(1.04) saturate(1.03)!important;
   animation:front-charge-breathe 2.4s ease-in-out infinite!important;
+}
+
+.bay-scene.charging .vehicle-lighting {
+  position:absolute;
+  z-index:9;
+  left:50%;
+  top:5%;
+  width:72%;
+  aspect-ratio:1322 / 1190;
+  transform:translateX(-50%);
+  pointer-events:none;
+}
+
+.bay-scene.charging .vehicle-lighting i {
+  position:absolute;
+  top:25.6%;
+  width:5.8%;
+  height:7.2%;
+  border-bottom:2px solid rgba(228,255,249,.92);
+  filter:drop-shadow(0 0 4px rgba(225,255,249,.95)) drop-shadow(0 0 10px rgba(85,237,189,.6));
+  animation:vehicle-led-pulse 2.4s ease-in-out infinite;
+}
+
+.bay-scene.charging .vehicle-lighting i:first-child {
+  left:22.5%;
+  border-left:2px solid rgba(228,255,249,.92);
+  border-radius:0 0 0 14px;
+}
+
+.bay-scene.charging .vehicle-lighting i:nth-child(2) {
+  right:22.5%;
+  border-right:2px solid rgba(228,255,249,.92);
+  border-radius:0 0 14px 0;
+}
+
+.bay-scene.charging .vehicle-lighting span {
+  position:absolute;
+  left:27%;
+  top:10%;
+  width:46%;
+  height:15%;
+  clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);
+  background:linear-gradient(112deg,transparent 20%,rgba(212,250,244,.15) 42%,rgba(255,255,255,.04) 52%,transparent 68%);
+  filter:blur(1px);
+  opacity:.7;
+  animation:vehicle-glass-sheen 4.8s ease-in-out infinite;
 }
 
 .bay-scene.charging .active-pad {
@@ -117,5 +163,343 @@
 .charging .energy-route { z-index:8!important;left:49.2%!important;top:55%!important;height:8%!important }
 
 @keyframes front-charge-breathe {
-  50% { filter:drop-shadow(0 25px 24px rgba(85,237,189,.25)) brightness(.96) }
+  50% { filter:drop-shadow(0 27px 24px rgba(85,237,189,.28)) drop-shadow(0 0 22px rgba(114,235,205,.18)) brightness(1.04) contrast(1.04) saturate(1.04) }
+}
+
+@keyframes vehicle-led-pulse {
+  50% { opacity:.82;filter:drop-shadow(0 0 6px #fff) drop-shadow(0 0 15px rgba(85,237,189,.85)) }
+}
+
+@keyframes vehicle-glass-sheen {
+  0%,100% { opacity:.42;transform:translateX(-5%) }
+  50% { opacity:.82;transform:translateX(5%) }
+}
+
+/* Compact additions for the extended five-stage demonstration. */
+.steps.five {
+  gap:10px;
+  font-size:11px;
+  font-weight:750;
+  letter-spacing:0;
+}
+
+.steps.five > i {
+  width:32px;
+  background:linear-gradient(90deg,rgba(85,237,189,.42),rgba(85,237,189,.08));
+}
+
+.steps.five span {
+  gap:7px;
+  white-space:nowrap;
+}
+
+.steps.five b {
+  border-color:rgba(85,237,189,.28);
+  background:rgba(85,237,189,.025);
+}
+
+.pbv-hero .feature-list {
+  display:grid;
+  grid-template-columns:repeat(3,max-content);
+  gap:8px 10px;
+  max-width:650px;
+  margin-top:24px;
+}
+
+.pbv-hero .feature-list span {
+  justify-content:flex-start;
+}
+
+/* Pairing stays gently active after the vehicle has settled into the bay. */
+.bay-scene.entering .moving-car {
+  animation:
+    front-straight-enter 3.5s cubic-bezier(.16,.75,.18,1) both,
+    pairing-car-signal 2.4s 3.5s ease-in-out infinite!important;
+}
+
+.bay-scene.entering .bay-target {
+  z-index:6;
+  left:50%!important;
+  top:50%!important;
+  width:22%!important;
+  height:68%!important;
+  transform:translate(-50%,-50%)!important;
+  opacity:1;
+  animation:pairing-field-in .7s 1s ease both;
+}
+
+.bay-scene.entering .bay-target i {
+  inset:0;
+  border:1px solid rgba(85,237,189,.42);
+  border-radius:42%;
+  box-shadow:0 0 22px rgba(85,237,189,.06),inset 0 0 24px rgba(85,237,189,.035);
+  animation:pairing-ring 2.4s ease-in-out infinite;
+}
+
+.bay-scene.entering .bay-target i:nth-child(2) {
+  inset:7%;
+  animation-delay:-1.2s;
+}
+
+.bay-scene.entering .bay-target:after {
+  content:'';
+  position:absolute;
+  left:-13%;
+  right:-13%;
+  top:8%;
+  height:2px;
+  border-radius:2px;
+  background:linear-gradient(90deg,transparent,rgba(178,255,232,.82),transparent);
+  box-shadow:0 0 12px rgba(85,237,189,.55);
+  animation:pairing-scan 2.2s ease-in-out infinite alternate;
+}
+
+.bay-scene.entering .bay-target span {
+  display:none;
+}
+
+.bay-scene.entering .active-pad {
+  animation:pairing-pad-response 1.8s 2.8s ease-in-out infinite;
+}
+
+@keyframes pairing-field-in {
+  from { opacity:0;transform:translate(-50%,-50%) scale(.86) }
+  to { opacity:1;transform:translate(-50%,-50%) scale(1) }
+}
+
+@keyframes pairing-ring {
+  0%,100% { opacity:.24;transform:scale(.96) }
+  50% { opacity:.72;transform:scale(1.025) }
+}
+
+@keyframes pairing-scan {
+  from { top:8%;opacity:.28 }
+  to { top:91%;opacity:.72 }
+}
+
+@keyframes pairing-car-signal {
+  0%,100% { filter:brightness(.8) saturate(.88) drop-shadow(0 18px 16px rgba(0,0,0,.58)) }
+  50% { filter:brightness(.88) saturate(.94) drop-shadow(0 20px 20px rgba(85,237,189,.16)) }
+}
+
+@keyframes pairing-pad-response {
+  0%,100% { filter:drop-shadow(0 8px 10px rgba(0,0,0,.6));opacity:.78 }
+  50% { filter:drop-shadow(0 8px 12px rgba(0,0,0,.62)) drop-shadow(0 0 14px rgba(85,237,189,.38));opacity:1 }
+}
+
+.living-field i:first-child {
+  left:7%;
+  top:76%;
+  bottom:auto;
+  transform:translate(-50%,-50%);
+}
+
+.living-field i:nth-child(2) {
+  right:7%;
+  top:24%;
+  transform:translate(50%,-50%);
+}
+
+.living-field i:nth-child(3) {
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  border-color:rgba(255,189,119,.8);
+  color:#ffbd77;
+}
+
+.bay-mode.complete-check {
+  border-color:rgba(85,237,189,.62);
+  box-shadow:0 0 28px rgba(85,237,189,.14);
+}
+
+.bay-mode.complete-check > i {
+  background:var(--mint);
+  box-shadow:0 0 0 6px rgba(85,237,189,.12),0 0 16px var(--mint);
+}
+
+.bay-mode.complete-check em {
+  color:var(--mint);
+}
+
+/* Refined charging information hierarchy. */
+.charging .charge-grid > aside {
+  padding:32px;
+  border-radius:12px;
+  border-color:rgba(125,196,174,.2);
+  background:linear-gradient(150deg,rgba(15,43,36,.98),rgba(6,23,19,.98));
+  box-shadow:inset 0 1px rgba(255,255,255,.025),0 22px 54px rgba(0,0,0,.18);
+  font-family:"Pretendard","Noto Sans KR","Malgun Gothic","Segoe UI",sans-serif;
+}
+
+.charging .charge-title {
+  align-items:flex-start;
+  gap:20px;
+}
+
+.charging .charge-title .eyebrow {
+  letter-spacing:0;
+  font-size:13px;
+  font-weight:750;
+}
+
+.charging .charge-title h2 {
+  margin:10px 0 0;
+  font-size:42px;
+  line-height:1.12;
+  font-weight:720;
+  letter-spacing:0;
+}
+
+.charging .live {
+  display:flex;
+  align-items:center;
+  flex:0 0 auto;
+  gap:7px;
+  padding-top:3px;
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:0;
+}
+
+.charging .live i {
+  margin:0;
+}
+
+.charging .metrics {
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  margin-top:20px;
+}
+
+.charging .metrics > .metric:last-child {
+  grid-column:1 / -1;
+}
+
+.charging .metric {
+  min-width:0;
+  padding:17px 18px;
+  border-radius:8px;
+  border-color:rgba(133,190,173,.18);
+  background:rgba(255,255,255,.025);
+  box-shadow:inset 0 1px rgba(255,255,255,.018);
+}
+
+.charging .metric.main {
+  grid-column:1 / -1;
+  padding:18px;
+  background:linear-gradient(110deg,rgba(85,237,189,.1),rgba(85,237,189,.025));
+}
+
+.charging .metric span {
+  color:#7fa99d;
+  font-size:13px;
+  font-weight:650;
+  letter-spacing:0;
+}
+
+.charging .metric strong {
+  margin-top:9px;
+  color:#f6fffc;
+  font-family:"Segoe UI Variable Display","Segoe UI","Malgun Gothic",sans-serif;
+  font-size:32px;
+  line-height:1;
+  font-weight:720;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:0;
+}
+
+.charging .metric.main strong {
+  font-size:56px;
+  line-height:1;
+}
+
+.charging .metric small {
+  margin-left:5px;
+  font-size:14px;
+  font-weight:700;
+}
+
+.charging .soc-gauge {
+  height:8px;
+  margin-top:16px;
+  border-radius:4px;
+}
+
+.charging .safety {
+  margin-top:10px;
+  padding:12px 14px;
+  border-radius:8px;
+  border-color:rgba(133,190,173,.17);
+  background:rgba(2,15,12,.18);
+}
+
+.charging .safety > div,
+.charging .safe-chip {
+  font-size:12px;
+  letter-spacing:0;
+}
+
+.charging .safe-chip {
+  min-height:35px;
+  padding:6px 0;
+}
+
+.charging .stop {
+  height:46px;
+  margin-top:11px;
+  border-radius:8px;
+  font-size:14px;
+  letter-spacing:0;
+}
+
+@media(min-width:1400px), (max-width:850px) {
+  .charging .metrics {
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+
+  .charging .metrics > .metric:last-child {
+    grid-column:auto;
+  }
+}
+
+@media(min-width:851px) and (max-height:950px) {
+  .charging .charge-grid > aside { padding:27px 30px }
+  .charging .charge-title h2 { margin-top:8px;font-size:40px }
+  .charging .metrics { gap:11px;margin-top:18px }
+  .charging .metric { padding:15px 16px }
+  .charging .metric.main { padding:16px 17px }
+  .charging .metric strong { margin-top:8px;font-size:29px }
+  .charging .metric.main strong { font-size:50px }
+  .charging .soc-gauge { margin-top:13px;height:9px }
+  .charging .safety { margin-top:11px;padding:11px 15px }
+  .charging .safe-chip { min-height:33px;padding:5px 0 }
+  .charging .stop { height:45px;margin-top:10px }
+}
+
+@media(min-width:851px) and (max-height:820px) {
+  .charging .charge-grid > aside { padding:18px 20px }
+  .charging .charge-title .eyebrow { font-size:11px }
+  .charging .charge-title h2 { margin-top:6px;font-size:32px }
+  .charging .metrics { grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px }
+  .charging .metrics > .metric:last-child { grid-column:auto }
+  .charging .metric { padding:10px 11px }
+  .charging .metric.main { padding:11px 12px }
+  .charging .metric span { font-size:10px }
+  .charging .metric strong { margin-top:6px;font-size:24px }
+  .charging .metric.main strong { font-size:42px }
+  .charging .metric small { font-size:11px }
+  .charging .soc-gauge { height:7px;margin-top:9px }
+  .charging .safety { margin-top:8px;padding:8px 12px }
+  .charging .safety > div,.charging .safe-chip { font-size:10px }
+  .charging .safe-chip { min-height:27px;padding:3px 0 }
+  .charging .stop { height:40px;margin-top:7px;font-size:12px }
+}
+
+@media(max-width:700px) {
+  .steps.five { gap:4px }
+  .steps.five > i { width:8px }
+  .steps.five span { gap:4px;font-size:7px }
+  .steps.five b { width:23px;height:23px }
+  .pbv-hero .feature-list { grid-template-columns:repeat(2,max-content) }
 }
